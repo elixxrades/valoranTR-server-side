@@ -44,12 +44,12 @@ app.use(
   })
 );
 
-app.use(function (req, res, next) {
-
+app.use(function(req, res, next) {
+  var IP = req.headers['x-forwarded-for'] || req.socket.remoteAddress
   res.error = (code, json) => {
     logger.error('New Error On Request.', {
       URL: ` ${req.protocol}://${req.get('host')}${req.originalUrl}`,
-      IP: req.ip,
+      IP: IP,
       BODY: req.body,
       PARAMS: req.params,
       QUERY: req.query,
@@ -64,7 +64,7 @@ app.use(function (req, res, next) {
       data: json
     })
   }
-  logger.debug(`New request : ${req.protocol}://${req.get('host')}${req.originalUrl}. IP Adress : ${req.ip}`)
+  logger.debug(`New request : ${req.protocol}://${req.get('host')}${req.originalUrl}. IP Adress : ${IP}`)
 
   next()
 })
